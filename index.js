@@ -10,7 +10,6 @@ app.use(cors())
 app.use(express.json())
 
 
-
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASS}@cluster0.2rn0dld.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -28,8 +27,22 @@ async function run() {
         // await client.connect();
 
         const craftCollection = client.db('craftDB').collection('crafts')
+        const artCategoryCollection = client.db('artCategoriesDB').collection('artCategories')
 
         app.get('/Craft_Item', async(req, res)=>{
+            const cursor = craftCollection.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        app.get('/art_category', async(req, res)=>{
+            const cursor = artCategoryCollection.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+        
+
+        app.get('/all_craft', async(req, res)=>{
             const cursor = craftCollection.find()
             const result = await cursor.toArray()
             res.send(result)
@@ -87,6 +100,12 @@ async function run() {
 
         })
 
+        app.post('/art_category', async(req, res)=>{
+            const art = req.body
+            console.log(art)
+            const result = await artCategoryCollection.insertOne(art)
+            res.send(result)
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
