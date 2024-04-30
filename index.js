@@ -47,7 +47,6 @@ async function run() {
         })
 
 
-        
 
         app.get('/all_craft', async(req, res)=>{
             const cursor = craftCollection.find()
